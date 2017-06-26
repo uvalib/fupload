@@ -1,0 +1,274 @@
+<!-- Copyright 2011 The Rector and Visitors of the University of Virginia 
+	Licensed under the Apache License, Version 2.0 (the "License"); you may not 
+	use this file except in compliance with the License. You may obtain a copy 
+	of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>edu.virginia.lib.fupload</groupId>
+	<artifactId>fupload</artifactId>
+	<version>1.0</version>
+	<name>fupload</name>
+	<description>Servlet to allow file upload to library server</description>
+	<packaging>war</packaging>
+	<url>https://github.com/uvalib/fupload</url>
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<ciManagement>
+		<url>http://hudson01.lib.virginia.edu:8080/jenkins/job/Firehose</url>
+	</ciManagement>
+	<scm>
+		<url>https://github.com/uvalib/fupload</url>
+	</scm>
+	<issueManagement>
+		<system>Jira</system>
+		<url>https://shibsp.itc.virginia.edu/jira/secure/IssueNavigator.jspa?pid=10072&amp;component=10114</url>
+	</issueManagement>
+	<organization>
+		<name>the University of Virginia Library :: OLE</name>
+		<url>http://www.lib.virginia.edu</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>slb</id>
+			<name>Sandy Bryant</name>
+			<email>slb@virginia.edu</email>
+		</developer>
+	</developers>
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<version.slf4j>1.6.2</version.slf4j>
+	</properties>
+
+	<dependencies>
+		<!-- The next 3 dependencies added for Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+		<!-- The next 2 dependencies added for Apache Bean Validation Support -->
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-validation_1.0_spec</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.bval</groupId>
+			<artifactId>org.apache.bval.bundle</artifactId>
+			<version>0.3-incubating</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+			<optional>false</optional>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.htmlcleaner</groupId>
+			<artifactId>htmlcleaner</artifactId>
+			<version>2.2</version>
+			<optional>false</optional>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+     		 <dependency>
+      			<groupId>javax.servlet</groupId>
+            		<artifactId>javax.servlet-api</artifactId>
+            		<version>3.1.0</version>
+       		</dependency>
+
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${version.slf4j}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>properties-maven-plugin</artifactId>
+		        <version>1.0-alpha-2</version>
+		        <executions>
+		          <execution>
+		            <phase>initialize</phase>
+		            <goals>
+		              <goal>read-project-properties</goal>
+		            </goals>
+		            <configuration>
+		              <files>
+		                <file>src/main/resources/edu/virginia/lib/fupload/config.properties</file>
+		              </files>
+		            </configuration>
+		          </execution>
+		        </executions>
+		      </plugin>
+
+      		<!-- plugin so you can run mvn jetty:run -->
+      		<plugin>
+        		<groupId>org.mortbay.jetty</groupId>
+        		<artifactId>jetty-maven-plugin</artifactId>
+        		<version>7.2.2.v20101205</version>
+		
+        		<configuration>
+         		<!--
+          		<webAppConfig>
+            		<contextPath>/pdaws</contextPath>
+          		</webAppConfig>
+          		-->
+          		<systemProperties>
+            		<!-- enable easy JMX connection to JConsole -->
+            		<systemProperty>
+              		<name>com.sun.management.jmxremote</name>
+              		<value/>
+            		</systemProperty>
+          		</systemProperties>
+          		<scanIntervalSeconds>10</scanIntervalSeconds>
+        		</configuration>
+		
+      		</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<skip>true</skip>
+					<!-- <excludes>
+		              <exclude>**/*MapperTest.java</exclude>
+		            </excludes> -->
+				</configuration>
+				<executions>
+					<execution>
+						<id>surefire-it</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Run the application using Tomcat, especially for tests -->
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<version>1.1.2</version>
+				<executions>
+					<execution>
+						<id>start-container</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop-container</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- Container configuration -->
+					<container>
+						<containerId>tomcat6x</containerId>
+						<zipUrlInstaller>
+							<url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip</url>
+						</zipUrlInstaller>
+					</container>
+					<configuration>
+						<deployables>
+							<deployable>
+								<artifactId>fupload</artifactId>
+								<groupId>edu.virginia.lib.fupload</groupId>
+								<properties>
+									<!--  put our test deployment at the root of the containers url structure -->
+									<context/>
+								</properties>
+							</deployable>
+						</deployables>
+						<properties>
+								<cargo.tomcat.ajp.port>9009</cargo.tomcat.ajp.port>
+						</properties>
+					</configuration>
+				</configuration>
+			</plugin>
+
+
+					</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>maven2-repository.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/</url>
+			<layout>default</layout>
+		</repository>
+		<!-- Required until the Servlet 3.0 API can be resolved in Central -->
+		<repository>
+			<id>Glassfish</id>
+			<name>Glassfish Maven2 Repository</name>
+			<url>http://download.java.net/maven/glassfish/</url>
+		</repository>
+		<repository>
+			<id>archiva</id>
+			<url>http://hudson01.lib.virginia.edu:8080/archiva/repository/internal/</url>
+		</repository>
+	</repositories>
+	
+	<pluginRepositories>
+  		<pluginRepository>
+		    <id>oss-sonatype-snapshots</id>
+		    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+	  	</pluginRepository>
+	</pluginRepositories>
+	
+
+
+</project>
