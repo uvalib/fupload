@@ -30,7 +30,17 @@
 	<param-value>/shanti</param-value>
     </init-param>
   </servlet>
-   
+
+  <servlet>
+    <display-name>ListFiles</display-name>
+    <servlet-name>ListFiles</servlet-name>
+    <servlet-class>edu.virginia.lib.fupload.ListFiles</servlet-class>
+    <init-param>
+	<param-name>upload_dir</param-name>
+	<param-value>/shanti</param-value>
+    </init-param>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>Fupload</servlet-name>
     <url-pattern>/uploadFile</url-pattern>
@@ -39,6 +49,11 @@
   <servlet-mapping>
     <servlet-name>Prune</servlet-name>
     <url-pattern>/pruneFile</url-pattern>
+  </servlet-mapping>
+     
+  <servlet-mapping>
+    <servlet-name>ListFiles</servlet-name>
+    <url-pattern>/dirList</url-pattern>
   </servlet-mapping>
      
   <welcome-file-list>
