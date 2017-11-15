@@ -46,8 +46,7 @@ public class ListFiles extends HttpServlet {
     }
 	
     /**
-     * Upon receiving file upload submission, parses the request to read
-     * upload data and saves the file on disk.
+     *  List out files in upload dir
      */
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
