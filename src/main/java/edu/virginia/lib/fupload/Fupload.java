@@ -40,6 +40,7 @@ public class Fupload extends HttpServlet {
     private static final String TIFARGS  = "-delete 1--1 -define jp2:rate=1.0,0.5,0.25";
     private static final String JPGARGS  = "-define jp2:rate=1.0,0.5,0.25";
     private static final String JP2ARGS  = "-define jp2:rate=1.0,0.5,0.25";
+    private static final String PNGARGS  = "-define jp2:rate=1.0,0.5,0.25";
     private static final String DEFCONVERTBIN = "/usr/bin/convert";
     private Hashtable<String,String> convArgs;
 
@@ -61,6 +62,8 @@ public class Fupload extends HttpServlet {
 	convArgs.put(".jpg",JPGARGS);
 	convArgs.put(".JPG",JPGARGS);
 	convArgs.put(".jp2",JP2ARGS);
+	convArgs.put(".PNG",PNGARGS);
+	convArgs.put(".png",PNGARGS);
     }
  
     /**

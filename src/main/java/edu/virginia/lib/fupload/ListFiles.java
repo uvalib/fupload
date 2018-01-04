@@ -65,7 +65,7 @@ public class ListFiles extends HttpServlet {
 		String mDate = df.format(new java.util.Date(aFile.lastModified()));
 		long fLen = aFile.length();
 	    	response.getWriter().write("\t{\"fileName\": \"" +
-				fName + "\",\"modDate\": \"" + mDate + "\",\"fileLen\": \"" + fLen + "" \"},\n");
+				fName + "\",\"modDate\": \"" + mDate + "\",\"fileLen\": \"" + fLen + "\"},\n");
 	    }
 	    response.getWriter().write("{}]}\n");
         } catch (Exception ex) {
