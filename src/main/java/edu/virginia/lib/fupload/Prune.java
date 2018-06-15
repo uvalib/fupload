@@ -25,20 +25,12 @@ public class Prune extends HttpServlet {
      
     // location to store file uploaded
     private static final String UPLOAD_DIR = "upload";
-    private static String config_dir;
-    private static String uploadPath;
- 
+	private static FileMapper mapper;
+
  
     public void init(ServletConfig config) throws ServletException {
-	super.init(config);
-	config_dir = this.getInitParameter("upload_dir");
-	uploadPath = "";
-	if ((config_dir != null) && (!config_dir.equals(""))) {
-		uploadPath = config_dir;
-	} else {
-        	uploadPath = getServletContext().getRealPath("")
-                	+ File.separator + UPLOAD_DIR;
-	}
+		super.init(config);
+		mapper = new FileMapper(this);
     }
 	
     /**
@@ -62,12 +54,11 @@ public class Prune extends HttpServlet {
 			throw new Exception("illegal path name ending '/'");
 		}
 	    }
-            String filePath = uploadPath + File.separator + fileName;
-	    File dFile = new File(filePath);
+	    File dFile = mapper.getFileLocation(fileName);
 	    if (dFile.delete()) {
-            	msg = filePath + " deleted.";
+            	msg = dFile.getName() + " deleted.";
 	    } else {
-            	msg = filePath + " not deleted.";
+            	msg = dFile.getName() + " not deleted.";
 	    }
 
 	

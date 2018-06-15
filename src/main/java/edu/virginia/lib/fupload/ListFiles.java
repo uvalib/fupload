@@ -27,21 +27,13 @@ public class ListFiles extends HttpServlet {
      
     // location to store file uploaded
     private static final String UPLOAD_DIR = "upload";
-    private static String config_dir;
-    private static String uploadPath;
+    private FileMapper mapper;
     private DateFormat df;
  
  
     public void init(ServletConfig config) throws ServletException {
 	super.init(config);
-	config_dir = this.getInitParameter("upload_dir");
-	uploadPath = "";
-	if ((config_dir != null) && (!config_dir.equals(""))) {
-		uploadPath = config_dir;
-	} else {
-        	uploadPath = getServletContext().getRealPath("")
-                	+ File.separator + UPLOAD_DIR;
-	}
+		mapper = new FileMapper(this);
 	df = DateFormat.getDateInstance(DateFormat.LONG,Locale.US);
     }
 	
@@ -57,10 +49,8 @@ public class ListFiles extends HttpServlet {
 	    response.setCharacterEncoding("UTF-8");
 	    response.setContentType("application/json");
 	    response.getWriter().write("\n{\"dirlisting\": [\n");
-	    File dir = new File(uploadPath);
-	    File [] files = dir.listFiles();
 	    boolean commaHack = false;
-	    for (File aFile : files ) {
+	    for (File aFile : mapper) {
 		String fName = aFile.getName();
 		String mDate = df.format(new java.util.Date(aFile.lastModified()));
 		long fLen = aFile.length();

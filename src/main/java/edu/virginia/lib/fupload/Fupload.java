@@ -26,9 +26,7 @@ public class Fupload extends HttpServlet {
     private static final long serialVersionUID = 1L;
      
     // location to store file uploaded
-    private static final String UPLOAD_DIR = "upload";
-    private static String config_dir;
-    private static String uploadPath;
+    private FileMapper mapper;
     private static String convBin;
  
     // upload settings
@@ -46,14 +44,7 @@ public class Fupload extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        config_dir = this.getInitParameter("upload_dir");
-        uploadPath = "";
-        if ((config_dir != null) && (!config_dir.equals(""))) {
-                uploadPath = config_dir;
-        } else {
-                uploadPath = getServletContext().getRealPath("")
-                        + File.separator + UPLOAD_DIR;
-        }
+        mapper = new FileMapper(this);
 	convBin = this.getInitParameter("convert_bin");
 	if (convBin == null) convBin = DEFCONVERTBIN;
 	convArgs = new Hashtable<String, String>();
@@ -83,13 +74,7 @@ public class Fupload extends HttpServlet {
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setFileSizeMax(MAX_FILE_SIZE);
         upload.setSizeMax(MAX_REQUEST_SIZE);
- 
-        // creates the directory if it does not exist
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
- 
+
         try {
             // parses the request's content to extract file data
             @SuppressWarnings("unchecked")
@@ -119,14 +104,13 @@ public class Fupload extends HttpServlet {
 			if (i  > -1) {
 				inFileName = inFileName.substring(++i);
 			}
-                        String inFilePath = uploadPath + File.separator + inFileName;
-                        File inFile = new File(inFilePath);
+                        File inFile = mapper.getFileLocation(inFileName);
  
                         // save the tiff file on disk
                         item.write(inFile);
-				String filePathJp2 = inFilePath.replace(inExt,".jp2");
+				String filePathJp2 = inFile.getPath().replace(inExt, ".jp2");
 				// convert  jp2
-				String convCmd = convBin + " " + inFilePath + " " + args + " " + filePathJp2;
+				String convCmd = convBin + " " + inFile.getPath() + " " + args + " " + filePathJp2;
 				Runtime rt = Runtime.getRuntime();
 				Process pr = rt.exec(convCmd);
 				pr.waitFor();
@@ -137,7 +121,7 @@ public class Fupload extends HttpServlet {
 	        		}
 				msg = msg + filePathJp2 + " has been created. ";
 				if (!inExt.equals(".jp2") && inFile.delete()) {
-                			msg = msg + inFilePath + " deleted. ";
+                			msg = msg + inFile.getAbsolutePath() + " deleted. ";
             			} 
 			}
                     }
