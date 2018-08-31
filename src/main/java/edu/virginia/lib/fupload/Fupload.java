@@ -36,27 +36,18 @@ public class Fupload extends HttpServlet {
 
     // image magick command args
     private static final String TIFARGS  = "-delete 1--1 -define jp2:rate=1.0,0.5,0.25";
-    private static final String JPGARGS  = "-define jp2:rate=1.0,0.5,0.25";
-    private static final String JP2ARGS  = "-define jp2:rate=1.0,0.5,0.25";
-    private static final String PNGARGS  = "-define jp2:rate=1.0,0.5,0.25";
+    private static final String DEFAULTARGS = "-define jp2:rate=1.0,0.5,0.25";
     private static final String DEFCONVERTBIN = "/usr/bin/convert";
-    private Hashtable<String,String> convArgs;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         mapper = new FileMapper(this);
-	convBin = this.getInitParameter("convert_bin");
-	if (convBin == null) convBin = DEFCONVERTBIN;
-	convArgs = new Hashtable<String, String>();
-	convArgs.put(".tif",TIFARGS);
-	convArgs.put(".TIF",TIFARGS);
-	convArgs.put(".jpg",JPGARGS);
-	convArgs.put(".JPG",JPGARGS);
-	convArgs.put(".jp2",JP2ARGS);
-	convArgs.put(".PNG",PNGARGS);
-	convArgs.put(".png",PNGARGS);
+        convBin = this.getInitParameter("convert_bin");
+        if (convBin == null) {
+        	convBin = DEFCONVERTBIN;
+        }
     }
- 
+
     /**
      * Upon receiving file upload submission, parses the request to read
      * upload data and saves the file on disk.
@@ -94,11 +85,9 @@ public class Fupload extends HttpServlet {
 				throw new Exception("no image name");
 			}
 			/* check file extension */
-			String inExt = inFileName.substring(inLen - 4);
-			String args= convArgs.get(inExt);
-			if (args == null) {
-				throw new Exception("illegal file extension for "  + inFileName);
-			}
+			String inExt = inFileName.substring(inLen - 4).toLowerCase();
+			String args = (inExt.equals(".tif") || inExt.equals(".nef") ? TIFARGS : DEFAULTARGS); 
+
 			/* if passed a path, lop off last bit */
 			int i = inFileName.lastIndexOf("/");
 			if (i  > -1) {
