@@ -85,8 +85,8 @@ public class Fupload extends HttpServlet {
 				throw new Exception("no image name");
 			}
 			/* check file extension */
-			String inExt = inFileName.substring(inLen - 4).toLowerCase();
-			String args = (inExt.equals(".tif") || inExt.equals(".nef") ? TIFARGS : DEFAULTARGS); 
+			String inExt = inFileName.substring(inLen - 4);
+			String args = (inExt.equalsIgnoreCase(".tif") || inExt.equalsIgnoreCase(".nef") ? TIFARGS : DEFAULTARGS); 
 
 			/* if passed a path, lop off last bit */
 			int i = inFileName.lastIndexOf("/");
