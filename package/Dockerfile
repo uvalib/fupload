@@ -16,7 +16,7 @@ RUN mvn clean package
 FROM tomcat:8.0
 
 # install updates and dependancies
-RUN apt-get -y update
+RUN apt-get -y update && apt-get -y install ImageMagick
 
 # add the healthcheck
 RUN mkdir /usr/local/tomcat/webapps/healthcheck && echo "OK" > /usr/local/tomcat/webapps/healthcheck/index.html
