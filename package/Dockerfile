@@ -19,7 +19,7 @@ FROM jetty:9.4.9-jre8-alpine
 USER root
 
 # install updates and dependancies
-RUN apk update && apk add imagemagick
+RUN apk update && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.3/main/ imagemagick=6.9.6.8-r0
 
 # the default user for this base image
 USER jetty
