@@ -32,7 +32,7 @@ USER root
 RUN apk update && apk upgrade && apk add libgomp
 
 # install our built imagemagick
-COPY --from=builder1 /usr/local/bin/convert /usr/local/bin/convert
+COPY --from=builder1 /usr/local/bin/convert /usr/bin/convert
 
 # the default user for this base image
 USER jetty
