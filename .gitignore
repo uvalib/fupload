@@ -4,3 +4,4 @@ target/
 /bin/
 package/scripts
 .idea
+tmp
