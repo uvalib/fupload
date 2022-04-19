@@ -1,5 +1,7 @@
-# builder1
-FROM openjdk:8 as builder1
+# 
+# build the target application
+#
+FROM public.ecr.aws/docker/library/openjdk:8-jdk as builder
 
 # update and install dependancies
 RUN apt-get -y update && apt-get -y install maven
@@ -13,8 +15,7 @@ COPY pom.xml ./
 RUN mvn clean package
 
 # base image
-#FROM jetty:9.4.9-jre8-alpine
-FROM jetty:9-jdk8-slim
+FROM public.ecr.aws/docker/library/jetty:9.4.46-jre8-slim
 
 # so we can install new packages
 USER root
@@ -27,7 +28,7 @@ USER jetty
 EXPOSE 8080
 
 # copy the WAR file
-COPY --from=builder1 /build/target/fupload-1.0.war /var/lib/jetty/webapps/ROOT.war
+COPY --from=builder /build/target/fupload-1.0.war /var/lib/jetty/webapps/ROOT.war
 
 #
 # end of file
