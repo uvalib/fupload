@@ -1,21 +1,22 @@
 # 
 # build the target application
 #
-FROM public.ecr.aws/docker/library/openjdk:8-jdk as builder
+FROM public.ecr.aws/docker/library/amazoncorretto:8-al2022-jdk as builder
 
 # update and install dependancies
-RUN apt-get -y update && apt-get -y install maven
+RUN yum -y update && yum -y install maven
 
 # copy assets
 WORKDIR /build
 COPY src ./src
 COPY pom.xml ./
 
-# build the tartet WAR file
+# build the target WAR file
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64
 RUN mvn clean package
 
 # base image
-FROM public.ecr.aws/docker/library/jetty:9.4.46-jre8-slim
+FROM public.ecr.aws/docker/library/jetty:9.4.50-jre8
 
 # so we can install new packages
 USER root
